@@ -1,0 +1,79 @@
+#include <Windows.h>
+#include <iostream>
+#include <GLFW/glfw3.h>
+double r = 0;
+double g = 0;
+double b = 0;
+float up1 = 0.0;
+float up2 = 0.0;
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if (action == GLFW_PRESS) {
+        if (key == GLFW_KEY_ESCAPE) {
+            glfwSetWindowShouldClose(window, true); // Close window on ESC
+        }
+        else if (key == GLFW_KEY_A) {
+            r += 0.1;
+        }
+        else if (key == GLFW_KEY_Z) {
+            r -= 0.1;
+        }
+        else if (key == GLFW_KEY_S) {
+            g += 0.1;
+        }
+        else if (key == GLFW_KEY_X) {
+            g -= 0.1;
+        }
+        else if (key == GLFW_KEY_D) {
+            b += 0.1;
+        }
+        else if (key == GLFW_KEY_C) {
+            b -= 0.1;
+        }
+        std::cout << "red = " << r << " green =" << g << " blue = " << b << std::endl;
+    }
+}
+void Face(GLfloat A[], GLfloat B[], GLfloat C[], GLfloat D[]) {
+    glBegin(GL_POLYGON);
+    glVertex3fv(A);
+    glVertex3fv(B);
+    glVertex3fv(C);
+    glVertex3fv(D);
+    glColor3d(r, g, b);
+    glEnd();
+}
+void Cube(GLfloat V0[], GLfloat V1[], GLfloat V2[], GLfloat V3[], GLfloat V4[], GLfloat V5[],GLfloat V6[], GLfloat V7[]) {
+    Face(V0,V1,V2,V3);
+    Face(V4, V5, V6, V7);
+}
+void render(window) {
+    GLfloat V[8][3] = {
+        {-0.5,0.5,0.5},
+        {0.5,0.5,0.5},
+        {0.5,-0.5,0.5},
+        {-0.5,-0.5,0.5},
+
+        {-0.5,0.5,-0.5},
+        {0.5,0.5,-0.5},
+        {0.5,-0.5,-0.5},
+        {-0.5,-0.5,-0.5},
+    };
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    Cube(V[0], V[1], V[2], V[3], V[4], V[5], V[6], V[7]);
+    glfwSwapBuffers(window);
+}
+
+int main() {
+    glfwInit();
+    GLFWwindow* window = glfwCreateWindow(800, 600, "OpenGL Tutorial", NULL, NULL);
+    glfwMakeContextCurrent(window);
+    glfwSetKeyCallback(window, keyCallback); // Set the key callback
+    while (!glfwWindowShouldClose(window)) {
+        render(window);
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    glfwDestroyWindow(window);
+    glfwTerminate();
+    return 0;
+}
